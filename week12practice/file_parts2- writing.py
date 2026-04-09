@@ -3,9 +3,15 @@
 
 my_file = open('sample.txt', 'w')
 
-my_file.write('party time!')
+my_file.write('party time!\n')
+my_file.write('hello world')
 
 
+family_file = open('family.txt', 'w')
+family_file.write('Amanda, 47\n')
+family_file.write('Bryon, 47\n')
+family_file.write('Britney, 24\n')
+family_file.write('Bryon, 22\n')
 
 
 
