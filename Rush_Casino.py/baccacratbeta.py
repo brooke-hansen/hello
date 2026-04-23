@@ -16,8 +16,8 @@ class Player:
     def add_Tokens(self, amount):
         self.tokens += amount
     
-    def temove_tokens(self, amount):
-        self.tokens -+ amount
+    def remove_tokens(self, amount):
+        self.tokens -= amount
         if self.tokens < 0:
             self.tokens = 0
     
@@ -116,7 +116,7 @@ class Baccarat: #Game
             print('NATURAL WIN!') #print statement
             return self.determine_winner() #jump to determine winner function
 
-        if player_score > 5: #if player score more than 5, player doesn't draw
+        elif player_score > 5: #if player score more than 5, player doesn't draw
             print("PLAYER HOLDS") #print statement
        
         elif player_score <= 5: #if player score less than 5, player draws again
@@ -131,47 +131,51 @@ class Baccarat: #Game
         #print statement, break in line    
         print('-------------------------------------------------------')
         
+        #banker rules for drawing:
         #banker's draw depends on the value of the player's 3rd card
         player_third_value = self.player_hand[2][2] if len(self.player_hand) == 3 else None
-
-        #banker rules for drawing
-        banker_draw = False #to trigger a print statement later if banker doesn't draw
-
-        if banker_score <= 2: #if banker score <=2 , draw card 
-            banker_draw = True
-            print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
-            self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
-            print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
-
-        if banker_score == 3 and player_third_value != 8: #if banker score = 3 and player's 3rd card < 8
-            banker_draw = True #banker draws card
-            print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
-            self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
-            print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
-
-
-        if banker_score == 4 and player_third_value in range(2,7+1): #if banker score = 4 and player's 3rd card is 2-7
-            banker_draw = True #banker draws card
-            print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
-            self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
-            print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
         
-        if banker_score == 5 and player_third_value in range(4,7+1): #if banker score = 5 and player's 3rd card is 4-7
-            banker_draw = True #banker draws card
-            print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
-            self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
-            print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
+        if player_third_value is None: #if player doesn't draw
+            #easy rules
+            if banker_score <= 5: #then if banker score < 5
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
+                self.banker_hand.append(self.deal_cards()) #draw/append new card #triggers deal_card function
+                print(self.format_card([self.banker_hand[2]])) #print new card #triggers dormat_card function
+            else: #if banker score > 5, 
+                print("BANKER HOLDS") #banker doesn't draw
+        
+        else: #complex rules
+            if banker_score <= 2: #if banker score <=2 , draw card 
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
+                self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
+                print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
 
-        if banker_score == 6 and player_third_value in range(6,7+1): #if banker score = 6 and player's 3rd card is 6 or 7
-            banker_draw = True #banker draws card
-            print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement    
-            self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
-            print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
-        
-        if banker_draw == False: #if banker doesn't draw new card
-            print("BANKER HOLDS") #print statement
-        
-        banker_score = self.calculate_hand(self.banker_hand) #recalculate banker's score after holding/drawing card #triggers caluclate_hand function
+            elif banker_score == 3 and player_third_value != 8: #if banker score = 3 and player's 3rd card < 8, draw card
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
+                self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
+                print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
+
+
+            elif banker_score == 4 and player_third_value in range(2,8): #if banker score = 4 and player's 3rd card is 2-7, draw card
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
+                self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
+                print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
+            
+            elif banker_score == 5 and player_third_value in range(4,8): #if banker score = 5 and player's 3rd card is 4-7, draw card
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement
+                self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
+                print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
+
+            elif banker_score == 6 and player_third_value in range(6,8): #if banker score = 6 and player's 3rd card is 6 or 7, draw card
+                print('BANKER DRAWS ANOTHER CARD!', end = ' -> ') #print statement    
+                self.banker_hand.append(self.deal_cards()) #draws/appends new card to banker hand #triggers deal_cards function
+                print(self.format_card([self.banker_hand[2]])) #prints new card #triggers format_card function
+            
+            else: #otherwise
+                print("BANKER HOLDS") #banker doesn't draw
+
+         #recalculate banker's score after holding/drawing card                 
+        banker_score = self.calculate_hand(self.banker_hand) #triggers caluclate_hand function
         #print statements for banker's score
         print("Banker's Hand -> ", self.format_card(self.banker_hand), end = ' -> ') #triggers format_card function
         print(f'Total score = {banker_score}')
